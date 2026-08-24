@@ -1,0 +1,856 @@
+/* ============================================================
+   MEDI-AI — PROFESSIONAL DOCTOR LOGIN
+   Inspired by modern healthcare AI landing-page aesthetics
+============================================================ */
+
+.doctor-login-page {
+    min-height: calc(100vh - 80px);
+    display: grid;
+    grid-template-columns: 1.12fr 0.88fr;
+    background: #f5faf9;
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   LEFT HERO
+============================================================ */
+
+.doctor-login-hero {
+    position: relative;
+    min-height: calc(100vh - 80px);
+    padding: 34px 7%;
+    box-sizing: border-box;
+    overflow: hidden;
+    color: white;
+    background:
+        radial-gradient(
+            circle at 76% 30%,
+            rgba(111, 226, 203, 0.28),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 15% 80%,
+            rgba(28, 144, 151, 0.28),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #073c42 0%,
+            #075a5e 45%,
+            #0b7777 100%
+        );
+}
+
+
+/* subtle grid */
+
+.doctor-login-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,0.4) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.4) 1px,
+            transparent 1px
+        );
+    background-size: 46px 46px;
+    pointer-events: none;
+}
+
+
+/* glow */
+
+.hero-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.hero-glow-one {
+    width: 420px;
+    height: 420px;
+    right: -130px;
+    bottom: -150px;
+    background: rgba(101, 229, 193, 0.22);
+}
+
+.hero-glow-two {
+    width: 280px;
+    height: 280px;
+    left: -150px;
+    top: 18%;
+    background: rgba(60, 188, 196, 0.16);
+}
+
+
+/* ============================================================
+   HERO TOP
+============================================================ */
+
+.hero-top {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hero-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.brand-symbol {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+    font-size: 16px;
+}
+
+.hero-badge {
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: #d5fff5;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.13);
+}
+
+
+/* ============================================================
+   HERO CONTENT
+============================================================ */
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 570px;
+    margin-top: 12vh;
+}
+
+.eyebrow,
+.login-eyebrow {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.eyebrow {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 999px;
+    color: #d7fff2;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+.hero-content h1 {
+    margin: 22px 0 18px;
+    font-size: clamp(42px, 4.4vw, 70px);
+    line-height: 1.03;
+    letter-spacing: -2.5px;
+    font-weight: 800;
+}
+
+.hero-content h1 span {
+    color: #d9ff58;
+}
+
+.hero-content > p {
+    max-width: 500px;
+    margin: 0;
+    color: rgba(255,255,255,0.75);
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.hero-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 13px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.88);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.09);
+}
+
+.hero-feature span {
+    color: #d9ff58;
+    font-weight: 900;
+}
+
+
+/* ============================================================
+   MEDICAL AI VISUAL
+============================================================ */
+
+.medical-visual {
+    position: absolute;
+    z-index: 1;
+    right: 5%;
+    bottom: 18%;
+    width: 390px;
+    height: 390px;
+}
+
+.visual-orbit {
+    position: absolute;
+    border: 1px solid rgba(185,255,235,0.15);
+    border-radius: 50%;
+}
+
+.orbit-one {
+    width: 300px;
+    height: 300px;
+    left: 45px;
+    top: 45px;
+}
+
+.orbit-two {
+    width: 230px;
+    height: 230px;
+    left: 80px;
+    top: 80px;
+    border-style: dashed;
+}
+
+.ai-core {
+    position: absolute;
+    left: 128px;
+    top: 128px;
+    width: 135px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background:
+        radial-gradient(
+            circle,
+            rgba(173,255,226,0.34),
+            rgba(12,104,105,0.85) 62%
+        );
+    border: 1px solid rgba(203,255,239,0.45);
+    box-shadow:
+        0 0 50px rgba(97,238,204,0.20);
+    backdrop-filter: blur(8px);
+}
+
+.ai-core-icon {
+    font-size: 20px;
+    color: #d9ff58;
+}
+
+.ai-core strong {
+    font-size: 29px;
+    line-height: 1;
+}
+
+.ai-core span {
+    margin-top: 5px;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.7);
+}
+
+
+/* floating data cards */
+
+.floating-card,
+.system-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border-radius: 14px;
+    background: rgba(14,71,76,0.76);
+    border: 1px solid rgba(255,255,255,0.14);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.14);
+    backdrop-filter: blur(12px);
+}
+
+.floating-card {
+    min-width: 210px;
+    padding: 12px;
+}
+
+.floating-card small,
+.system-card small {
+    display: block;
+    color: rgba(255,255,255,0.58);
+    font-size: 9px;
+}
+
+.floating-card strong,
+.system-card strong {
+    display: block;
+    margin-top: 2px;
+    color: white;
+    font-size: 11px;
+}
+
+.floating-card b {
+    margin-left: auto;
+    color: #d9ff58;
+    font-size: 15px;
+}
+
+.floating-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.10);
+    font-size: 17px;
+}
+
+.heart-icon {
+    color: #ff8ca2;
+}
+
+.drop-icon {
+    color: #73e9df;
+}
+
+.brain-icon {
+    color: #d9ff58;
+}
+
+.heart-card {
+    left: -5px;
+    top: 65px;
+}
+
+.diabetes-card {
+    right: -18px;
+    top: 200px;
+}
+
+.brain-card {
+    left: 15px;
+    bottom: 47px;
+}
+
+.system-card {
+    right: 4px;
+    bottom: 5px;
+    padding: 11px 13px;
+}
+
+.online-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #7dffca;
+    box-shadow: 0 0 12px #7dffca;
+}
+
+
+/* ============================================================
+   HERO FOOTER
+============================================================ */
+
+.hero-footer {
+    position: absolute;
+    z-index: 2;
+    left: 7%;
+    right: 7%;
+    bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 18px;
+    border-radius: 13px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.hero-footer span {
+    color: rgba(255,255,255,0.55);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+}
+
+
+/* ============================================================
+   RIGHT LOGIN PANEL
+============================================================ */
+
+.doctor-login-panel {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 45px 6%;
+    box-sizing: border-box;
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(80, 185, 171, 0.12),
+            transparent 30%
+        ),
+        #f7fbfa;
+}
+
+.login-card {
+    width: min(100%, 470px);
+    padding: 42px;
+    box-sizing: border-box;
+    border-radius: 26px;
+    background: rgba(255,255,255,0.96);
+    border: 1px solid #e4efec;
+    box-shadow:
+        0 25px 70px rgba(15, 74, 76, 0.11);
+}
+
+.mobile-brand {
+    display: none;
+    align-items: center;
+    gap: 9px;
+    color: #087a79;
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 30px;
+}
+
+.login-header {
+    text-align: center;
+}
+
+.login-lock {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 17px;
+    border-radius: 16px;
+    background: #e9f7f4;
+    font-size: 23px;
+}
+
+.login-eyebrow {
+    color: #0c8a86;
+}
+
+.login-header h2 {
+    margin: 9px 0 9px;
+    color: #16353a;
+    font-size: 31px;
+    letter-spacing: -0.8px;
+}
+
+.login-header p {
+    margin: 0 auto;
+    max-width: 350px;
+    color: #71858a;
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+
+/* ============================================================
+   FORM
+============================================================ */
+
+.doctor-login-form {
+    margin-top: 28px;
+}
+
+.login-field {
+    margin-bottom: 19px;
+}
+
+.login-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #29434a;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    z-index: 1;
+    color: #6c9a99;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.input-wrap input {
+    width: 100%;
+    height: 53px;
+    box-sizing: border-box;
+    padding: 0 48px;
+    border: 1px solid #d8e7e4;
+    border-radius: 13px;
+    outline: none;
+    background: #f9fcfb;
+    color: #18363b;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.input-wrap input::placeholder {
+    color: #9aacab;
+}
+
+.input-wrap input:focus {
+    border-color: #0c8b86;
+    background: white;
+    box-shadow:
+        0 0 0 4px rgba(12,139,134,0.08);
+}
+
+.show-password {
+    position: absolute;
+    right: 10px;
+    padding: 7px 8px;
+    border: none;
+    background: transparent;
+    color: #087f7d;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+
+/* security */
+
+.security-note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 3px 0 20px;
+    padding: 11px 13px;
+    border-radius: 11px;
+    background: #f0faf7;
+    border: 1px solid #d9eee8;
+}
+
+.security-note > span {
+    width: 23px;
+    height: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+    background: #168e80;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.security-note strong {
+    display: block;
+    color: #2d5b59;
+    font-size: 11px;
+}
+
+.security-note small {
+    display: block;
+    margin-top: 2px;
+    color: #7c9997;
+    font-size: 9px;
+}
+
+
+/* login button */
+
+.doctor-login-button {
+    width: 100%;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    color: white;
+    background: linear-gradient(
+        135deg,
+        #087f7d,
+        #0b9690
+    );
+    box-shadow:
+        0 12px 24px
+        rgba(8,127,125,0.19);
+    font-size: 14px;
+    font-weight: 800;
+    transition: 0.2s ease;
+}
+
+.doctor-login-button:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 15px 30px
+        rgba(8,127,125,0.24);
+}
+
+.doctor-login-button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* error */
+
+.doctor-login-error {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 20px;
+    padding: 12px 14px;
+    border-radius: 11px;
+    color: #a62c36;
+    background: #fff3f3;
+    border: 1px solid #f5d4d6;
+    font-size: 12px;
+}
+
+.doctor-login-error > span {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+    background: #d9545d;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   FOOTER / INFO
+============================================================ */
+
+.login-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 25px 0 20px;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e8efed;
+}
+
+.login-divider span {
+    color: #a0afae;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.login-info {
+    display: flex;
+    gap: 11px;
+    padding: 13px;
+    border-radius: 13px;
+    background: #f8fbfa;
+}
+
+.info-icon {
+    width: 25px;
+    height: 25px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #0b807d;
+    background: #e5f4f1;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.login-info strong {
+    color: #355257;
+    font-size: 11px;
+}
+
+.login-info p {
+    margin: 3px 0 0;
+    color: #839696;
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+.back-home-button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: #5d797b;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.back-home-button:hover {
+    color: #087f7d;
+}
+
+.login-bottom {
+    margin-top: 22px;
+    color: #9aacab;
+    text-align: center;
+    font-size: 9px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 1100px) {
+
+    .doctor-login-page {
+        grid-template-columns: 1fr;
+    }
+
+    .doctor-login-hero {
+        min-height: 540px;
+    }
+
+    .medical-visual {
+        right: 5%;
+        bottom: 8%;
+        transform: scale(0.78);
+        transform-origin: bottom right;
+    }
+
+    .doctor-login-panel {
+        min-height: auto;
+        padding: 55px 20px;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .doctor-login-hero {
+        min-height: 600px;
+        padding: 25px 22px;
+    }
+
+    .hero-badge {
+        display: none;
+    }
+
+    .hero-content {
+        margin-top: 65px;
+    }
+
+    .hero-content h1 {
+        font-size: 43px;
+        letter-spacing: -1.7px;
+    }
+
+    .hero-content > p {
+        font-size: 14px;
+    }
+
+    .medical-visual {
+        right: 50%;
+        bottom: -15px;
+        transform:
+            translateX(50%)
+            scale(0.55);
+        transform-origin: bottom center;
+    }
+
+    .hero-footer {
+        display: none;
+    }
+
+    .login-card {
+        padding: 30px 22px;
+        border-radius: 20px;
+    }
+
+    .mobile-brand {
+        display: flex;
+    }
+
+    .login-header h2 {
+        font-size: 27px;
+    }
+}
+
+.doctor-hero-image {
+    position: absolute;
+    z-index: 2;
+    right:0;
+    left:20px;
+    bottom: 0;
+    width: min(100%, 430px);
+    max-height: 100%;
+    object-fit: contain;
+    object-position: bottom;
+    filter: drop-shadow(0 20px 28px rgba(0, 20, 25, 0.28));
+    pointer-events: none;
+    OPACITY: 0.89;
+}

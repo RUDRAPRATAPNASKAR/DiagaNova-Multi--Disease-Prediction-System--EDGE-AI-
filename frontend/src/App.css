@@ -1,0 +1,891 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #172033;
+}
+
+
+/* NAVBAR */
+
+.navbar {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+    background: white;
+    border-bottom: 1px solid #e7ebf2;
+}
+
+.brand {
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 800;
+    color: #2563eb;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #475467;
+    font-weight: 600;
+}
+
+
+/* HOME */
+
+.home {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+}
+
+.home-content {
+    max-width: 750px;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 800;
+    color: #2563eb;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.home h1 {
+    font-size: 52px;
+    line-height: 1.1;
+    margin: 0 0 20px;
+}
+
+.home p {
+    color: #667085;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.home-intro {
+    max-width: 660px;
+    margin: 0 auto;
+}
+
+.home-highlights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 30px 0 22px;
+    text-align: left;
+}
+
+.home-highlight {
+    padding: 17px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(18, 53, 62, 0.05);
+}
+
+.home-highlight span {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+}
+
+.home-highlight strong {
+    display: block;
+    margin: 8px 0 5px;
+    color: var(--ink);
+    font-size: 14px;
+}
+
+.home-highlight p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.home-credit {
+    margin: 0 auto;
+    color: var(--muted) !important;
+    font-size: 12px !important;
+    line-height: 1.6 !important;
+}
+
+.home-credit strong {
+    color: var(--ink);
+}
+
+.home-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 35px;
+}
+
+.main-button {
+    display: inline-block;
+    padding: 14px 25px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.doctor-button {
+    background: #172033;
+}
+
+
+/* DASHBOARD */
+
+.dashboard {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+.dashboard h1 {
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #667085;
+    margin-top: 0;
+}
+
+
+/* SEARCH */
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin: 30px 0;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid #d0d5dd;
+    border-radius: 9px;
+    font-size: 16px;
+}
+
+.search-box button {
+    border: none;
+    border-radius: 9px;
+    padding: 0 25px;
+    background: #2563eb;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+/* PATIENT */
+
+.patient-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.patient-info > div {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.patient-info span {
+    display: block;
+    color: #667085;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+
+/* DISEASE CARDS */
+/* ============================================================
+   DISEASE PREDICTION CARDS
+============================================================ */
+
+.disease-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+
+.disease-card {
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, 0.05);
+
+    border:
+        1px solid #e7ebf2;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.disease-card:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 22px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.disease-icon {
+
+    width: 65px;
+
+    height: 65px;
+
+    min-width: 65px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: #eef4ff;
+
+    font-size: 34px;
+}
+
+
+.disease-content {
+
+    flex: 1;
+}
+
+
+.disease-card h3 {
+
+    margin: 0 0 6px;
+
+    font-size: 17px;
+
+    color: #172033;
+}
+
+
+.percentage-value {
+
+    font-size: 30px;
+
+    font-weight: 800;
+
+    color: #2563eb;
+
+    line-height: 1.1;
+
+}
+
+
+.percentage-label {
+
+    margin: 6px 0 0;
+
+    font-size: 12px;
+
+    color: #667085;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    .disease-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+/* DiagaNova clinical workspace */
+body {
+    font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+    background:
+        radial-gradient(circle at 92% 0%, rgba(8, 127, 131, 0.08), transparent 28rem),
+        #f4f8f8;
+    color: var(--ink);
+}
+
+.navbar {
+    height: 76px;
+    padding: 0 clamp(20px, 6vw, 88px);
+    background: rgba(255, 255, 255, 0.94);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 4px 18px rgba(18, 53, 62, 0.04);
+}
+
+.brand, .logo, .login-logo, .registration-logo {
+    color: var(--accent);
+    letter-spacing: 0.03em;
+}
+
+.brand { font-size: 23px; }
+.nav-links { gap: 28px; }
+.nav-links a { color: var(--muted); transition: color 160ms ease; }
+.nav-links a:hover { color: var(--accent); }
+
+.doctor-dashboard {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 52px 0 72px;
+}
+
+.doctor-header { margin-bottom: 30px; }
+.dashboard-label {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+.doctor-header h1 { margin: 0; font-size: clamp(32px, 4vw, 48px); letter-spacing: -0.03em; }
+.doctor-header p { margin: 9px 0 0; color: var(--muted); font-size: 16px; }
+
+.doctor-search {
+    display: flex;
+    gap: 12px;
+    padding: 8px;
+    margin-bottom: 24px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(18, 53, 62, 0.06);
+}
+.doctor-search input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    outline: 0;
+    padding: 13px 15px;
+    color: var(--ink);
+    background: transparent;
+}
+.doctor-search button, .search-box button, .main-button {
+    border: 0;
+    border-radius: 9px;
+    background: var(--accent);
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+.doctor-search button { padding: 0 22px; }
+.doctor-search button:hover, .search-box button:hover, .main-button:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 8px 18px rgba(8, 127, 131, 0.2); }
+
+.doctor-error, .error {
+    padding: 13px 16px;
+    margin: 0 0 20px;
+    color: #a33a36;
+    background: #fff2f0;
+    border: 1px solid #f2cfca;
+    border-radius: 10px;
+}
+.doctor-profile { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+.doctor-profile-card, .assessment-summary > div {
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+.doctor-profile-card span, .assessment-summary span, .overall-status span { display: block; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.doctor-profile-card strong { display: block; margin-top: 7px; font-size: 18px; }
+
+.doctor-results, .history, .doctor-feedback-section {
+    padding: 28px;
+    margin-top: 24px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(18, 53, 62, 0.06);
+}
+.doctor-results h2, .history h2, .feedback-header h2, .email-report-section h2 { margin: 0 0 18px; font-size: 23px; letter-spacing: -0.02em; }
+.disease-card { border-color: var(--line); border-radius: 12px; box-shadow: none; padding: 20px; }
+.disease-card:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(18, 53, 62, 0.08); }
+.disease-icon { background: var(--accent-soft); }
+.prediction-percentage { color: var(--accent) !important; }
+.assessment-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 4px 0 14px; }
+.assessment-summary strong { display: block; margin-top: 6px; font-size: 15px; }
+.overall-status { padding: 17px 20px; border-left: 4px solid var(--accent); background: #eef8f7; border-radius: 8px; }
+.overall-status strong { display: block; margin-top: 6px; color: var(--accent-dark); font-size: 14px; }
+.doctor-feedback-section { margin-top: 24px; }
+.feedback-header p, .email-report-section p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+.feedback-field label { color: var(--ink); }
+.feedback-field textarea, .feedback-field input { border-color: var(--line); background: #fbfdfd; transition: border-color 160ms ease, box-shadow 160ms ease; }
+.feedback-field textarea:focus, .feedback-field input:focus, .doctor-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(8, 127, 131, 0.12); }
+.generate-report-button { background: var(--navy); border-radius: 9px; transition: background 160ms ease, transform 160ms ease; }
+.generate-report-button:hover:not(:disabled) { background: var(--accent-dark); transform: translateY(-1px); }
+.email-report-section { margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--line); }
+.table-container { overflow-x: auto; }
+.history table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.history th { color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-align: left; text-transform: uppercase; }
+.history th, .history td { padding: 14px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.history tbody tr:last-child td { border-bottom: 0; }
+.doctor-message { margin: 24px 0; padding: 22px; color: var(--muted); text-align: center; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; }
+.doctor-disclaimer { margin-top: 28px; padding: 18px 20px; color: #536b71; background: #eaf4f3; border: 1px solid #cce5e2; border-radius: 12px; font-size: 13px; line-height: 1.55; }
+.doctor-disclaimer strong { color: var(--navy); }
+.doctor-disclaimer p { margin: 5px 0 0; }
+
+@media (max-width: 760px) {
+    .doctor-dashboard { width: min(100% - 28px, 560px); padding-top: 32px; }
+    .doctor-search { flex-direction: column; }
+    .doctor-search button { min-height: 46px; }
+    .doctor-profile, .assessment-summary { grid-template-columns: 1fr 1fr; }
+    .doctor-results, .history, .doctor-feedback-section { padding: 20px; }
+    .overall-status strong { line-height: 1.7; }
+}
+
+@media (max-width: 460px) {
+    .navbar { padding: 0 16px; }
+    .nav-links { gap: 14px; }
+    .doctor-profile, .assessment-summary { grid-template-columns: 1fr; }
+}
+
+/* PATIENT PROFILE */
+
+.patient-profile {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 30px;
+}
+
+
+.patient-profile > div {
+
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, 0.05);
+}
+
+
+.patient-profile span {
+
+    display: block;
+
+    color: #667085;
+
+    font-size: 13px;
+
+    margin-bottom: 8px;
+}
+
+
+.patient-profile strong {
+
+    font-size: 18px;
+}
+
+
+.section-title {
+
+    margin-bottom: 20px;
+}
+
+
+.assessment-info {
+
+    background: white;
+
+    padding: 18px;
+
+    border-radius: 10px;
+
+    margin-bottom: 20px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+/* MOBILE */
+
+@media (max-width: 768px) {
+      .patient-profile {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .assessment-info {
+
+        flex-direction: column;
+
+    }
+
+    .navbar {
+        padding: 0 20px;
+    }
+
+    .nav-links {
+        gap: 12px;
+    }
+
+    .home h1 {
+        font-size: 38px;
+    }
+
+    .home-buttons {
+        flex-direction: column;
+    }
+
+    .home-highlights {
+        grid-template-columns: 1fr;
+        text-align: left;
+    }
+
+    .main-button {
+        width: 100%;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-box button {
+        padding: 14px;
+    }
+
+    .patient-info {
+        grid-template-columns: 1fr;
+    }
+
+    .disease-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* ============================================================
+   DOCTOR FEEDBACK SECTION
+============================================================ */
+
+.doctor-feedback-section {
+
+    margin-top: 30px;
+
+    padding: 30px;
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    border: 1px solid #e4e7ec;
+
+    box-shadow:
+        0 4px 18px
+        rgba(0, 0, 0, 0.05);
+}
+
+
+.feedback-header h2 {
+
+    margin: 0 0 8px;
+
+    font-size: 24px;
+
+    color: #101828;
+}
+
+
+.feedback-header p {
+
+    margin: 0 0 25px;
+
+    color: #667085;
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   FEEDBACK FIELD
+============================================================ */
+
+.feedback-field {
+
+    margin-bottom: 25px;
+}
+
+
+.feedback-field label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    color: #344054;
+}
+
+
+.required {
+
+    margin-left: 4px;
+
+    color: #d92d20;
+}
+
+
+.feedback-field textarea {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px;
+
+    border:
+        1px solid #d0d5dd;
+
+    border-radius: 10px;
+
+    resize: vertical;
+
+    min-height: 120px;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    outline: none;
+}
+
+
+.feedback-field textarea:focus {
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, 0.10);
+}
+
+
+.character-count {
+
+    margin-top: 6px;
+
+    text-align: right;
+
+    font-size: 12px;
+
+    color: #98a2b3;
+}
+
+
+/* ============================================================
+   REVIEW CHECKBOX
+============================================================ */
+
+.review-confirmation {
+
+    margin-top: 10px;
+
+    padding: 16px;
+
+    background: #f8fafc;
+
+    border-radius: 10px;
+
+    border: 1px solid #e4e7ec;
+}
+
+
+.checkbox-label {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    color: #344054;
+}
+
+
+.checkbox-label input {
+
+    width: 18px;
+
+    height: 18px;
+
+    margin-top: 1px;
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   FEEDBACK STATUS
+============================================================ */
+
+.feedback-status {
+
+    margin-top: 20px;
+
+    padding: 13px 16px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.feedback-status.incomplete {
+
+    background: #fffaeb;
+
+    color: #b54708;
+
+    border: 1px solid #fedf89;
+}
+
+
+.feedback-status.complete {
+
+    background: #ecfdf3;
+
+    color: #027a48;
+
+    border: 1px solid #abefc6;
+}
+
+
+/* ============================================================
+   GENERATE REPORT BUTTON
+============================================================ */
+
+.generate-report-button {
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.generate-report-button:hover:not(:disabled) {
+
+    background: #1d4ed8;
+}
+
+
+.generate-report-button:disabled {
+
+    background: #98a2b3;
+
+    cursor: not-allowed;
+
+    opacity: 0.7;
+}
+
+
+/* ============================================================
+   MOBILE RESPONSIVE
+============================================================ */
+
+@media (max-width: 768px) {
+
+    .doctor-feedback-section {
+
+        padding: 20px;
+
+        margin-top: 20px;
+    }
+
+
+    .feedback-header h2 {
+
+        font-size: 20px;
+    }
+
+
+    .feedback-field textarea {
+
+        min-height: 110px;
+    }
+
+}

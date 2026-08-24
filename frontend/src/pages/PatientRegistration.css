@@ -1,0 +1,576 @@
+.registration-page {
+
+    min-height: calc(100vh - 80px);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 40px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f4f8ff,
+            #eef4ff
+        );
+}
+
+
+/* ============================================================
+   REGISTRATION CARD
+   ============================================================ */
+
+.registration-card {
+
+    width: 100%;
+
+    max-width: 650px;
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
+    padding: 42px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(30, 70, 130, 0.12);
+
+    border: 1px solid #e8eef8;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.registration-header {
+
+    text-align: center;
+
+    margin-bottom: 32px;
+}
+
+
+.registration-logo {
+
+    display: inline-block;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    color: #2563eb;
+
+    margin-bottom: 10px;
+}
+
+
+.registration-header h1 {
+
+    margin: 0;
+
+    font-size: 30px;
+
+    color: #172033;
+}
+
+
+.registration-header p {
+
+    margin-top: 8px;
+
+    color: #6b7280;
+
+    font-size: 15px;
+}
+
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+.registration-form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+/* ============================================================
+   FORM GROUP
+   ============================================================ */
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.form-group label {
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #374151;
+}
+
+
+/* ============================================================
+   INPUT + SELECT
+   ============================================================ */
+
+.form-group input,
+.form-group select {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px 16px;
+
+    border: 1px solid #d8e0ec;
+
+    border-radius: 12px;
+
+    background: #fafcff;
+
+    color: #000000;
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+
+/* ============================================================
+   INPUT FOCUS
+   ============================================================ */
+
+.form-group input:focus,
+.form-group select:focus {
+
+    border-color: #2563eb;
+
+    background: #ffffff;
+
+    color: #000000;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, 0.10);
+}
+
+
+/* ============================================================
+   PLACEHOLDER
+   ============================================================ */
+
+.form-group input::placeholder {
+
+    color: #666666;
+
+    opacity: 1;
+}
+
+
+/* ============================================================
+   SELECT
+   ============================================================ */
+
+.form-group select {
+
+    color: #000000;
+
+    cursor: pointer;
+}
+
+
+.form-group select option {
+
+    color: #000000;
+
+    background: #ffffff;
+}
+
+
+/* ============================================================
+   SMALL HELP TEXT
+   ============================================================ */
+
+.form-group small {
+
+    color: #7b8494;
+
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   TWO COLUMN ROW
+   ============================================================ */
+
+.form-row {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 18px;
+}
+
+
+/* ============================================================
+   REGISTER BUTTON
+   ============================================================ */
+
+.registration-form button {
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.registration-form button:hover {
+
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+}
+
+
+.registration-form button:disabled {
+
+    opacity: 0.65;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.registration-error {
+
+    padding: 13px 15px;
+
+    border-radius: 10px;
+
+    background: #fff1f2;
+
+    color: #be123c;
+
+    border: 1px solid #fecdd3;
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   SUCCESS
+   ============================================================ */
+
+.registration-success {
+
+    padding: 13px 15px;
+
+    border-radius: 10px;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+
+    border: 1px solid #bbf7d0;
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.registration-footer {
+
+    margin-top: 28px;
+
+    padding-top: 22px;
+
+    border-top: 1px solid #edf1f7;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 14px;
+
+    color: #6b7280;
+}
+
+
+.registration-footer button {
+
+    background: none;
+
+    border: none;
+
+    color: #2563eb;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+/* Patient entry page visual system */
+.registration-page {
+    min-height: calc(100vh - 76px);
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(460px, 1.1fr);
+    align-items: center;
+    gap: clamp(36px, 7vw, 112px);
+    padding: 64px clamp(24px, 8vw, 120px);
+    background:
+        radial-gradient(circle at 17% 20%, rgba(75, 211, 191, 0.2), transparent 23rem),
+        radial-gradient(circle at 82% 80%, rgba(19, 112, 112, 0.55), transparent 28rem),
+        #073b43;
+    position: relative;
+    overflow: hidden;
+}
+
+.registration-page::before,
+.registration-page::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgba(170, 241, 224, 0.12);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.registration-page::before { width: 460px; height: 460px; left: -250px; top: -170px; }
+.registration-page::after { width: 540px; height: 540px; right: -280px; bottom: -310px; }
+
+.registration-visual {
+    color: #f4fffc;
+    position: relative;
+    z-index: 1;
+    max-width: 510px;
+    min-height: 540px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6px 0 20px;
+}
+
+.registration-hero-image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.28;
+    mix-blend-mode: soft-light;
+    filter: saturate(0.85) contrast(1.05);
+    pointer-events: none;
+}
+
+.visual-topline,
+.visual-copy,
+.visual-insight {
+    position: relative;
+    z-index: 3;
+}
+
+.visual-topline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #a7ded4;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.visual-mark {
+    display: grid;
+    place-items: center;
+    width: 25px;
+    height: 25px;
+    border: 1px solid rgba(167, 222, 212, 0.6);
+    border-radius: 50%;
+    color: #baff6b;
+    font-size: 18px;
+}
+
+.visual-copy { margin: auto 0; padding: 70px 0 42px; }
+.visual-eyebrow { margin-bottom: 16px; color: #baff6b; font-size: 13px; font-weight: 700; }
+.visual-copy h2 { margin: 0 0 22px; color: #f4fffc; font-size: clamp(42px, 5vw, 70px); font-weight: 500; line-height: 0.98; letter-spacing: -0.04em; }
+.visual-copy > p:last-child { max-width: 410px; margin: 0; color: #b2d2ce; font-size: 15px; line-height: 1.7; }
+
+.visual-insight {
+    width: min(100%, 430px);
+    max-height: 390px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(186, 255, 107, 0.75) rgba(255, 255, 255, 0.08);
+    padding: 18px 20px;
+    background: rgba(10, 69, 77, 0.74);
+    border: 1px solid rgba(179, 236, 223, 0.25);
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(0, 20, 26, 0.2);
+}
+
+.visual-insight::-webkit-scrollbar {
+    width: 8px;
+}
+
+.visual-insight::-webkit-scrollbar-track {
+    margin: 12px 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.visual-insight::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: rgba(186, 255, 107, 0.72);
+    background-clip: padding-box;
+}
+
+.visual-insight::-webkit-scrollbar-thumb:hover {
+    background: #baff6b;
+    background-clip: padding-box;
+}
+
+.visual-insight span { color: #9fc8c2; font-size: 11px; }
+.visual-insight strong { display: block; margin: 5px 0 13px; color: white; font-size: 17px; font-weight: 600; }
+.steps-language-section + .steps-language-section { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(179, 236, 223, 0.22); }
+.patient-steps { display: grid; gap: 7px; margin: 0; padding-left: 23px; color: #c0ddd8; font-size: 11px; line-height: 1.45; }
+.patient-steps li { padding-left: 3px; }
+.patient-steps li::marker { color: #baff6b; font-weight: 800; }
+.patient-steps b { color: #f4fffc; font-weight: 700; }
+.insight-line { display: flex; align-items: end; gap: 7px; height: 38px; margin-bottom: 11px; }
+.insight-line i { display: block; width: 18%; border-radius: 3px 3px 0 0; background: #baff6b; }
+.insight-line i:nth-child(1) { height: 32%; opacity: .45; }
+.insight-line i:nth-child(2) { height: 58%; opacity: .65; }
+.insight-line i:nth-child(3) { height: 42%; opacity: .8; }
+.insight-line i:nth-child(4) { height: 84%; }
+.insight-line i:nth-child(5) { height: 68%; opacity: .8; }
+
+.registration-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 620px;
+    padding: clamp(26px, 4vw, 42px);
+    background: rgba(250, 255, 253, 0.97);
+    border: 1px solid rgba(218, 246, 239, 0.75);
+    border-radius: 20px;
+    box-shadow: 0 26px 70px rgba(0, 23, 29, 0.32);
+}
+
+.registration-header { text-align: left; margin-bottom: 27px; }
+.registration-logo { margin-bottom: 18px; color: #087f83; font-size: 22px; letter-spacing: 0.04em; }
+.registration-header h1 { color: #12353e; font-size: 30px; letter-spacing: -0.03em; }
+.registration-header p { color: #6b7e80; }
+.registration-form { gap: 16px; }
+.form-group { gap: 6px; }
+.form-group label { color: #23444a; font-size: 13px; }
+.form-group input, .form-group select { padding: 12px 14px; border-color: #d6e5e2; border-radius: 9px; background: #f8fcfb; font-size: 14px; }
+.form-group input:focus, .form-group select:focus { border-color: #087f83; box-shadow: 0 0 0 3px rgba(8, 127, 131, .12); }
+.form-group small { color: #718487; font-size: 11px; }
+.registration-form button { margin-top: 4px; padding: 14px; border-radius: 9px; background: #087f83; transition: background 160ms ease, transform 160ms ease; }
+.registration-form button:hover { background: #056166; transform: translateY(-1px); }
+.registration-footer { margin-top: 22px; padding-top: 18px; border-color: #dce9e6; color: #718487; font-size: 12px; }
+.registration-footer button { padding: 0; color: #087f83; font-size: 12px; }
+
+@media (max-width: 900px) {
+    .registration-page { grid-template-columns: 1fr; gap: 28px; padding: 42px 24px 56px; }
+    .registration-visual { min-height: auto; max-width: 620px; }
+    .visual-copy { padding: 48px 0 34px; }
+    .visual-copy h2 { font-size: clamp(42px, 10vw, 62px); }
+}
+
+@media (max-width: 560px) {
+    .registration-page { padding: 30px 14px 42px; }
+    .registration-card { padding: 24px 18px; border-radius: 16px; }
+    .form-row { grid-template-columns: 1fr; gap: 16px; }
+    .visual-copy { padding: 42px 0 28px; }
+    .visual-copy h2 { font-size: 43px; }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .registration-card {
+
+        padding: 28px 20px;
+
+        border-radius: 18px;
+    }
+
+
+    .registration-header h1 {
+
+        font-size: 25px;
+    }
+
+
+    .form-row {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .registration-footer {
+
+        flex-direction: column;
+
+    }
+
+}
