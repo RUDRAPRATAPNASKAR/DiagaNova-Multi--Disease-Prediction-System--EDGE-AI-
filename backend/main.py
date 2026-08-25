@@ -645,91 +645,24 @@ def doctor_login(
 
     try:
 
-        # ----------------------------------------------------
-        # CLEAN INPUT
-        # ----------------------------------------------------
-
-        doctor_id = login.doctor_id.strip()
-        password = login.password.strip()
-
-
-        # ----------------------------------------------------
-        # CHECK DOCTOR
-        # ----------------------------------------------------
-
         doctor = db.query(
             Doctor
         ).filter(
-            Doctor.doctor_id == doctor_id
+            Doctor.doctor_id ==
+            login.doctor_id
         ).first()
 
 
-        # ----------------------------------------------------
-        # AUTO-CREATE DEFAULT DOCTOR
-        # ----------------------------------------------------
-
-        # If DR-002 does not exist in the Render database,
-        # create it automatically.
-
         if not doctor:
 
-            if (
-                doctor_id == "DR-002"
-                and password == "123456789"
-            ):
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid Doctor ID or password"
+            )
 
-                doctor = Doctor(
-
-                    doctor_id="DR-002",
-
-                    name="DR. Koushik Chatterjee",
-
-                    password_hash=hash_password(
-                        "123456789"
-                    )
-                )
-
-                db.add(doctor)
-
-                db.commit()
-
-                db.refresh(doctor)
-
-                print(
-                    "================================"
-                )
-
-                print(
-                    "DEFAULT DOCTOR CREATED"
-                )
-
-                print(
-                    "Doctor ID: DR-002"
-                )
-
-                print(
-                    "Doctor Name: "
-                    "DR. Koushik Chatterjee"
-                )
-
-                print(
-                    "================================"
-                )
-
-            else:
-
-                raise HTTPException(
-                    status_code=401,
-                    detail="Invalid Doctor ID or password"
-                )
-
-
-        # ----------------------------------------------------
-        # VERIFY PASSWORD
-        # ----------------------------------------------------
 
         if not verify_password(
-            password,
+            login.password,
             doctor.password_hash
         ):
 
@@ -739,18 +672,10 @@ def doctor_login(
             )
 
 
-        # ----------------------------------------------------
-        # CREATE JWT TOKEN
-        # ----------------------------------------------------
-
         token = create_access_token(
             doctor.doctor_id
         )
 
-
-        # ----------------------------------------------------
-        # SUCCESS
-        # ----------------------------------------------------
 
         return {
 
@@ -769,6 +694,150 @@ def doctor_login(
         }
 
 
+    finally:
+
+        db.close()
+
+
+# ============================================================
+# SAVE DOCTOR ASSESSMENT
+# ============================================================
+
+@app.post("/api/doctor/assessment")
+def save_doctor_assessment(
+    assessment: DoctorAssessmentRequest
+):
+
+    db = SessionLocal()
+
+    try:
+
+        # ----------------------------------------------------
+        # CHECK PATIENT
+        # ----------------------------------------------------
+
+        patient = db.query(
+            Patient
+        ).filter(
+            Patient.patient_id ==
+            assessment.patient_id
+        ).first()
+
+
+        if not patient:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Patient not found"
+            )
+
+
+        # ----------------------------------------------------
+        # CHECK DOCTOR
+        # ----------------------------------------------------
+
+        doctor = db.query(
+            Doctor
+        ).filter(
+            Doctor.doctor_id ==
+            assessment.doctor_id
+        ).first()
+
+
+        if not doctor:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Doctor not found"
+            )
+
+
+        # ----------------------------------------------------
+        # VALIDATE ASSESSMENT
+        # ----------------------------------------------------
+
+        if not assessment.clinical_assessment.strip():
+
+            raise HTTPException(
+                status_code=400,
+                detail="Clinical assessment is required"
+            )
+
+
+        if not assessment.recommendation.strip():
+
+            raise HTTPException(
+                status_code=400,
+                detail="Doctor recommendation is required"
+            )
+
+
+        # ----------------------------------------------------
+        # DATE
+        # ----------------------------------------------------
+
+        assessment_date = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
+
+
+        # ----------------------------------------------------
+        # CREATE ASSESSMENT
+        # ----------------------------------------------------
+
+        new_assessment = DoctorAssessment(
+
+            patient_id=
+                assessment.patient_id,
+
+            doctor_id=
+                assessment.doctor_id,
+
+            clinical_assessment=
+                assessment.clinical_assessment.strip(),
+
+            recommendation=
+                assessment.recommendation.strip(),
+
+            assessment_date=
+                assessment_date
+        )
+
+
+        db.add(
+            new_assessment
+        )
+
+        db.commit()
+
+        db.refresh(
+            new_assessment
+        )
+
+
+        return {
+
+            "message":
+                "Doctor assessment saved successfully",
+
+            "assessment_id":
+                new_assessment.id,
+
+            "patient_id":
+                new_assessment.patient_id,
+
+            "doctor_id":
+                new_assessment.doctor_id,
+
+            "doctor_name":
+                doctor.name,
+
+            "assessment_date":
+                new_assessment.assessment_date
+
+        }
+
+
     except HTTPException:
 
         raise
@@ -778,10 +847,576 @@ def doctor_login(
 
         db.rollback()
 
-        print(
-            "Doctor login error:",
-            str(e)
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
         )
+
+
+    finally:
+
+        db.close()
+
+
+# ============================================================
+# GENERATE PATIENT PDF REPORT
+# ============================================================
+
+@app.get("/api/reports/generate/{patient_id}")
+def generate_patient_pdf(
+    patient_id: str
+):
+
+    db = SessionLocal()
+
+    try:
+
+        # ----------------------------------------------------
+        # FIND PATIENT
+        # ----------------------------------------------------
+
+        patient = db.query(
+            Patient
+        ).filter(
+            Patient.patient_id ==
+            patient_id
+        ).first()
+
+
+        if not patient:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Patient not found"
+            )
+
+
+        # ----------------------------------------------------
+        # FIND LATEST DOCTOR ASSESSMENT
+        # ----------------------------------------------------
+
+        doctor_assessment = db.query(
+            DoctorAssessment
+        ).filter(
+            DoctorAssessment.patient_id ==
+            patient_id
+        ).order_by(
+            DoctorAssessment.id.desc()
+        ).first()
+
+
+        if not doctor_assessment:
+
+            raise HTTPException(
+                status_code=404,
+                detail=(
+                    "Doctor assessment not found. "
+                    "Please save the doctor's "
+                    "assessment first."
+                )
+            )
+
+
+        # ----------------------------------------------------
+        # FIND DOCTOR
+        # ----------------------------------------------------
+
+        doctor = db.query(
+            Doctor
+        ).filter(
+            Doctor.doctor_id ==
+            doctor_assessment.doctor_id
+        ).first()
+
+
+        if not doctor:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Doctor not found"
+            )
+
+
+        # ----------------------------------------------------
+        # GET THINGSPEAK DATA
+        # ----------------------------------------------------
+
+        data = get_all_records(100)
+
+        patient_records = []
+
+
+        for item in data.get(
+            "feeds",
+            []
+        ):
+
+            if str(
+                item.get("field1")
+            ) == str(
+                patient_id
+            ):
+
+                patient_records.append({
+
+                    "patient_id":
+                        item.get("field1"),
+
+                    "heart_disease":
+                        item.get("field2"),
+
+                    "diabetes":
+                        item.get("field3"),
+
+                    "brain_tumor":
+                        item.get("field4"),
+
+                    "entry_id":
+                        item.get("entry_id"),
+
+                    "created_at":
+                        item.get("created_at")
+
+                })
+
+
+        if not patient_records:
+
+            raise HTTPException(
+                status_code=404,
+                detail="No AI prediction found for this patient"
+            )
+
+
+        # ----------------------------------------------------
+        # LATEST PREDICTION
+        # ----------------------------------------------------
+
+        prediction = patient_records[-1]
+
+
+        # ----------------------------------------------------
+        # REPORT DIRECTORY
+        # ----------------------------------------------------
+
+        report_directory = "reports"
+
+        os.makedirs(
+            report_directory,
+            exist_ok=True
+        )
+
+
+        # ----------------------------------------------------
+        # FILE NAME
+        # ----------------------------------------------------
+
+        file_name = (
+            f"DiagaNova_Patient_"
+            f"{patient_id}_Report.pdf"
+        )
+
+
+        file_path = os.path.join(
+            report_directory,
+            file_name
+        )
+
+
+        # ----------------------------------------------------
+        # PATIENT DATA
+        # ----------------------------------------------------
+
+        patient_data = {
+
+            "patient_id":
+                patient.patient_id,
+
+            "name":
+                patient.name,
+
+            "age":
+                patient.age,
+
+            "gender":
+                patient.gender,
+
+            "phone":
+                patient.phone,
+
+            "email":
+                patient.email
+
+        }
+
+
+        # ----------------------------------------------------
+        # DOCTOR DATA
+        # ----------------------------------------------------
+
+        doctor_data = {
+
+            "doctor_id":
+                doctor.doctor_id,
+
+            "name":
+                doctor.name
+
+        }
+
+
+        # ----------------------------------------------------
+        # GENERATE PDF
+        # ----------------------------------------------------
+
+        generate_patient_report(
+
+            file_path=file_path,
+
+            patient=patient_data,
+
+            prediction=prediction,
+
+            doctor=doctor_data,
+
+            clinical_assessment=
+                doctor_assessment.clinical_assessment,
+
+            recommendation=
+                doctor_assessment.recommendation
+        )
+
+
+        return FileResponse(
+
+            path=file_path,
+
+            media_type="application/pdf",
+
+            filename=file_name
+        )
+
+
+    except HTTPException:
+
+        raise
+
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
+
+    finally:
+
+        db.close()
+
+
+# ============================================================
+# SEND PATIENT PDF REPORT BY EMAIL
+# ============================================================
+
+@app.post("/api/reports/email/{patient_id}")
+def email_patient_report(
+    patient_id: str,
+    request: SendReportEmailRequest
+):
+
+    db = SessionLocal()
+
+    try:
+
+        # ----------------------------------------------------
+        # FIND PATIENT
+        # ----------------------------------------------------
+
+        patient = db.query(
+            Patient
+        ).filter(
+            Patient.patient_id ==
+            patient_id
+        ).first()
+
+
+        if not patient:
+
+            raise HTTPException(
+                status_code=404,
+                detail=
+                    f"Patient {patient_id} not found"
+            )
+
+
+        # ----------------------------------------------------
+        # USE EMAIL SAVED DURING REGISTRATION
+        # ----------------------------------------------------
+
+        email = patient.email
+
+
+        # ----------------------------------------------------
+        # BACKUP:
+        # IF FRONTEND SENDS EMAIL, USE IT
+        # ----------------------------------------------------
+
+        if not email and request.patient_email:
+
+            email = request.patient_email.strip()
+
+
+        if not email:
+
+            raise HTTPException(
+                status_code=400,
+                detail=
+                    "Patient email is not registered"
+            )
+
+
+        # ----------------------------------------------------
+        # FIND LATEST DOCTOR ASSESSMENT
+        # ----------------------------------------------------
+
+        doctor_assessment = db.query(
+            DoctorAssessment
+        ).filter(
+            DoctorAssessment.patient_id ==
+            patient_id
+        ).order_by(
+            DoctorAssessment.id.desc()
+        ).first()
+
+
+        if not doctor_assessment:
+
+            raise HTTPException(
+                status_code=404,
+                detail=(
+                    "Doctor assessment not found. "
+                    "Save the doctor's assessment first."
+                )
+            )
+
+
+        # ----------------------------------------------------
+        # FIND DOCTOR
+        # ----------------------------------------------------
+
+        doctor = db.query(
+            Doctor
+        ).filter(
+            Doctor.doctor_id ==
+            doctor_assessment.doctor_id
+        ).first()
+
+
+        if not doctor:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Doctor not found"
+            )
+
+
+        # ----------------------------------------------------
+        # GET THINGSPEAK DATA
+        # ----------------------------------------------------
+
+        data = get_all_records(100)
+
+        patient_records = []
+
+
+        for item in data.get(
+            "feeds",
+            []
+        ):
+
+            if str(
+                item.get("field1")
+            ) == str(
+                patient_id
+            ):
+
+                patient_records.append({
+
+                    "patient_id":
+                        item.get("field1"),
+
+                    "heart_disease":
+                        item.get("field2"),
+
+                    "diabetes":
+                        item.get("field3"),
+
+                    "brain_tumor":
+                        item.get("field4"),
+
+                    "entry_id":
+                        item.get("entry_id"),
+
+                    "created_at":
+                        item.get("created_at")
+
+                })
+
+
+        if not patient_records:
+
+            raise HTTPException(
+                status_code=404,
+                detail=
+                    "No AI prediction found for this patient"
+            )
+
+
+        # ----------------------------------------------------
+        # LATEST PREDICTION
+        # ----------------------------------------------------
+
+        prediction = patient_records[-1]
+
+
+        # ----------------------------------------------------
+        # REPORT DIRECTORY
+        # ----------------------------------------------------
+
+        report_directory = "reports"
+
+        os.makedirs(
+            report_directory,
+            exist_ok=True
+        )
+
+
+        # ----------------------------------------------------
+        # PDF FILE
+        # ----------------------------------------------------
+
+        file_name = (
+            f"DiagaNova_Patient_"
+            f"{patient_id}_Report.pdf"
+        )
+
+
+        file_path = os.path.join(
+            report_directory,
+            file_name
+        )
+
+
+        # ----------------------------------------------------
+        # PATIENT DATA
+        # ----------------------------------------------------
+
+        patient_data = {
+
+            "patient_id":
+                patient.patient_id,
+
+            "name":
+                patient.name,
+
+            "age":
+                patient.age,
+
+            "gender":
+                patient.gender,
+
+            "phone":
+                patient.phone,
+
+            "email":
+                patient.email
+
+        }
+
+
+        # ----------------------------------------------------
+        # DOCTOR DATA
+        # ----------------------------------------------------
+
+        doctor_data = {
+
+            "doctor_id":
+                doctor.doctor_id,
+
+            "name":
+                doctor.name
+
+        }
+
+
+        # ----------------------------------------------------
+        # GENERATE PDF
+        # ----------------------------------------------------
+
+        generate_patient_report(
+
+            file_path=file_path,
+
+            patient=patient_data,
+
+            prediction=prediction,
+
+            doctor=doctor_data,
+
+            clinical_assessment=
+                doctor_assessment.clinical_assessment,
+
+            recommendation=
+                doctor_assessment.recommendation
+        )
+
+
+        # ----------------------------------------------------
+        # SEND EMAIL
+        # ----------------------------------------------------
+
+        send_patient_report(
+
+            patient_email=email,
+
+            patient_name=patient.name,
+
+            patient_id=patient.patient_id,
+
+            pdf_path=file_path
+        )
+
+
+        # ----------------------------------------------------
+        # SUCCESS
+        # ----------------------------------------------------
+
+        return {
+
+            "message":
+                "Patient report emailed successfully",
+
+            "patient_id":
+                patient.patient_id,
+
+            "email":
+                email,
+
+            "file":
+                file_name
+
+        }
+
+
+    except HTTPException:
+
+        raise
+
+
+    except Exception as e:
+
+        db.rollback()
 
         raise HTTPException(
             status_code=500,
