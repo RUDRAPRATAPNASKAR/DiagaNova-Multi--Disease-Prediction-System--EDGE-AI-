@@ -99,7 +99,7 @@ function PatientRegistration() {
             // ------------------------------------------------
 
             await axios.post(
-                "http://127.0.0.1:8000/api/patients",
+                "https://diaganova-backend.onrender.com/api/patients",
                 {
                     patient_id: form.patient_id.trim(),
 
