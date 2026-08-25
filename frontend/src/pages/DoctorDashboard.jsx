@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+
 import API from "../services/api";
 
 import {
@@ -10,9 +10,9 @@ import {
 
 function DoctorDashboard() {
 
-    // ========================================================
+    // ============================================================
     // PATIENT
-    // ========================================================
+    // ============================================================
 
     const [patientId, setPatientId] = useState("");
 
@@ -21,9 +21,9 @@ function DoctorDashboard() {
     const [history, setHistory] = useState(null);
 
 
-    // ========================================================
+    // ============================================================
     // STATUS
-    // ========================================================
+    // ============================================================
 
     const [loading, setLoading] = useState(false);
 
@@ -32,9 +32,9 @@ function DoctorDashboard() {
     const [success, setSuccess] = useState("");
 
 
-    // ========================================================
+    // ============================================================
     // DOCTOR FEEDBACK
-    // ========================================================
+    // ============================================================
 
     const [clinicalAssessment, setClinicalAssessment] =
         useState("");
@@ -46,9 +46,9 @@ function DoctorDashboard() {
         useState(false);
 
 
-    // ========================================================
+    // ============================================================
     // ASSESSMENT
-    // ========================================================
+    // ============================================================
 
     const [savingAssessment, setSavingAssessment] =
         useState(false);
@@ -57,17 +57,17 @@ function DoctorDashboard() {
         useState(false);
 
 
-    // ========================================================
+    // ============================================================
     // PDF
-    // ========================================================
+    // ============================================================
 
     const [generatingPDF, setGeneratingPDF] =
         useState(false);
 
 
-    // ========================================================
+    // ============================================================
     // EMAIL
-    // ========================================================
+    // ============================================================
 
     const [patientEmail, setPatientEmail] =
         useState("");
@@ -76,13 +76,20 @@ function DoctorDashboard() {
         useState(false);
 
 
-    // ========================================================
+    // ============================================================
     // SEARCH PATIENT
-    // ========================================================
+    // ============================================================
 
     const searchPatient = async () => {
 
-        if (!patientId.trim()) {
+        const id = patientId.trim();
+
+
+        // --------------------------------------------------------
+        // CHECK PATIENT ID
+        // --------------------------------------------------------
+
+        if (!id) {
 
             setError(
                 "Please enter Patient ID."
@@ -100,6 +107,11 @@ function DoctorDashboard() {
 
             setSuccess("");
 
+
+            // ----------------------------------------------------
+            // CLEAR OLD DATA
+            // ----------------------------------------------------
+
             setProfile(null);
 
             setHistory(null);
@@ -115,48 +127,193 @@ function DoctorDashboard() {
             setPatientEmail("");
 
 
-            // ------------------------------------------------
-            // PATIENT PROFILE
-            // ------------------------------------------------
-
-            const patientProfile =
-                await getPatientProfile(
-                    patientId.trim()
-                );
-
-
-            // ------------------------------------------------
-            // PATIENT HISTORY
-            // ------------------------------------------------
-
-            const patientHistory =
-                await getPatientHistory(
-                    patientId.trim()
-                );
-
-
-            setProfile(
-                patientProfile
+            console.log(
+                "======================================"
             );
 
-            setHistory(
-                patientHistory
+            console.log(
+                "SEARCHING PATIENT"
+            );
+
+            console.log(
+                "PATIENT ID:",
+                id
+            );
+
+            console.log(
+                "======================================"
             );
 
 
-        } catch (error) {
+            // ====================================================
+            // GET SQL PATIENT PROFILE
+            // ====================================================
+
+            let patientProfile = null;
+
+            try {
+
+                console.log(
+                    "Requesting SQL profile..."
+                );
+
+                patientProfile =
+                    await getPatientProfile(id);
+
+                console.log(
+                    "SQL PROFILE SUCCESS:",
+                    patientProfile
+                );
+
+
+                setProfile(
+                    patientProfile
+                );
+
+
+                // Automatically use patient's email
+                if (
+                    patientProfile &&
+                    patientProfile.email
+                ) {
+
+                    setPatientEmail(
+                        patientProfile.email
+                    );
+
+                }
+
+            } catch (profileError) {
+
+                console.error(
+                    "SQL PROFILE ERROR:",
+                    profileError
+                );
+
+
+                console.error(
+                    "SQL PROFILE RESPONSE:",
+                    profileError.response?.data
+                );
+
+
+                throw new Error(
+                    profileError.response?.data?.detail ||
+                    "Patient profile not found in SQL database."
+                );
+
+            }
+
+
+            // ====================================================
+            // GET THINGSPEAK / PREDICTION HISTORY
+            // ====================================================
+
+            let patientHistory = null;
+
+            try {
+
+                console.log(
+                    "Requesting ThingSpeak prediction history..."
+                );
+
+                patientHistory =
+                    await getPatientHistory(id);
+
+                console.log(
+                    "THINGSPEAK HISTORY SUCCESS:",
+                    patientHistory
+                );
+
+
+                setHistory(
+                    patientHistory
+                );
+
+            } catch (historyError) {
+
+                console.error(
+                    "THINGSPEAK HISTORY ERROR:",
+                    historyError
+                );
+
+
+                console.error(
+                    "THINGSPEAK RESPONSE:",
+                    historyError.response?.data
+                );
+
+
+                // ------------------------------------------------
+                // IMPORTANT:
+                // Profile can still be displayed even if
+                // ThingSpeak history fails.
+                // ------------------------------------------------
+
+                setHistory({
+                    patient_id: id,
+                    count: 0,
+                    records: []
+                });
+
+
+                setError(
+                    "Patient profile found, but prediction history could not be loaded."
+                );
+
+                return;
+            }
+
+
+            // ====================================================
+            // SUCCESS
+            // ====================================================
+
+            console.log(
+                "======================================"
+            );
+
+            console.log(
+                "PATIENT SEARCH COMPLETED"
+            );
+
+            console.log(
+                "======================================"
+            );
+
+
+            setSuccess(
+                `Patient ${id} loaded successfully.`
+            );
+
+
+        } catch (searchError) {
 
             console.error(
-                "Patient search error:",
-                error
+                "======================================"
             );
+
+            console.error(
+                "PATIENT SEARCH FAILED"
+            );
+
+            console.error(
+                searchError
+            );
+
+            console.error(
+                "======================================"
+            );
+
 
             setProfile(null);
 
             setHistory(null);
 
+
             setError(
-                error.response?.data?.detail ||
+                searchError.message ||
+                searchError.response?.data?.detail ||
                 "Patient not found."
             );
 
@@ -164,13 +321,14 @@ function DoctorDashboard() {
         } finally {
 
             setLoading(false);
+
         }
     };
 
 
-    // ========================================================
+    // ============================================================
     // LATEST RECORD
-    // ========================================================
+    // ============================================================
 
     const latestRecord =
         history?.records?.length
@@ -180,28 +338,41 @@ function DoctorDashboard() {
             : null;
 
 
-    // ========================================================
-    // PREDICTION TEXT
-    // ========================================================
+    // ============================================================
+    // PREDICTION PERCENTAGE
+    // ============================================================
 
     const predictionPercentage = (value) => {
-    if (value === null || value === undefined || value === "") {
-        return "N/A";
-    }
 
-    const number = Number(value);
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
+        ) {
 
-    if (Number.isNaN(number)) {
-        return "N/A";
-    }
+            return "N/A";
 
-    return `${number.toFixed(2)}%`;
+        }
+
+
+        const number = Number(value);
+
+
+        if (Number.isNaN(number)) {
+
+            return "N/A";
+
+        }
+
+
+        return `${number.toFixed(2)}%`;
+
     };
 
 
-    // ========================================================
+    // ============================================================
     // CHECK FEEDBACK
-    // ========================================================
+    // ============================================================
 
     const feedbackComplete =
         clinicalAssessment.trim().length > 0 &&
@@ -209,9 +380,9 @@ function DoctorDashboard() {
         reviewed;
 
 
-    // ========================================================
+    // ============================================================
     // SAVE DOCTOR ASSESSMENT
-    // ========================================================
+    // ============================================================
 
     const saveDoctorAssessment = async () => {
 
@@ -264,9 +435,9 @@ function DoctorDashboard() {
             setSuccess("");
 
 
-            // ------------------------------------------------
+            // ====================================================
             // GET LOGGED-IN DOCTOR ID
-            // ------------------------------------------------
+            // ====================================================
 
             const doctorId =
                 localStorage.getItem(
@@ -284,16 +455,20 @@ function DoctorDashboard() {
             }
 
 
-            // ------------------------------------------------
-            // SEND ASSESSMENT
-            // ------------------------------------------------
+            console.log(
+                "Doctor ID:",
+                doctorId
+            );
+
+
+            // ====================================================
+            // SAVE ASSESSMENT
+            // ====================================================
 
             const response =
                 await API.post(
-                         "/doctor/assessment",
-
+                    "/doctor/assessment",
                     {
-
                         patient_id:
                             profile.patient_id,
 
@@ -305,9 +480,7 @@ function DoctorDashboard() {
 
                         recommendation:
                             recommendation.trim()
-
                     }
-
                 );
 
 
@@ -333,24 +506,23 @@ function DoctorDashboard() {
 
 
             setError(
-
                 error.response?.data?.detail ||
-
                 "Unable to save doctor assessment."
-
             );
 
 
         } finally {
 
             setSavingAssessment(false);
+
         }
+
     };
 
 
-    // ========================================================
+    // ============================================================
     // GENERATE PDF
-    // ========================================================
+    // ============================================================
 
     const generatePDF = async () => {
 
@@ -385,26 +557,20 @@ function DoctorDashboard() {
 
             const response =
                 await API.get(
-
                     `/reports/generate/${profile.patient_id}`,
-
                     {
                         responseType: "blob"
                     }
-
                 );
 
 
             const blob =
                 new Blob(
-
                     [response.data],
-
                     {
                         type:
                             "application/pdf"
                     }
-
                 );
 
 
@@ -457,30 +623,25 @@ function DoctorDashboard() {
 
 
             setError(
-
                 error.response?.data?.detail ||
-
                 "Unable to generate patient PDF report."
-
             );
 
 
         } finally {
 
             setGeneratingPDF(false);
+
         }
+
     };
 
 
-    // ========================================================
+    // ============================================================
     // SEND PDF BY EMAIL
-    // ========================================================
+    // ============================================================
 
     const sendReportByEmail = async () => {
-
-        // ----------------------------------------------------
-        // CHECK PATIENT
-        // ----------------------------------------------------
 
         if (!profile) {
 
@@ -492,10 +653,6 @@ function DoctorDashboard() {
         }
 
 
-        // ----------------------------------------------------
-        // CHECK ASSESSMENT
-        // ----------------------------------------------------
-
         if (!assessmentSaved) {
 
             setError(
@@ -506,10 +663,6 @@ function DoctorDashboard() {
         }
 
 
-        // ----------------------------------------------------
-        // CHECK EMAIL
-        // ----------------------------------------------------
-
         if (!patientEmail.trim()) {
 
             setError(
@@ -519,10 +672,6 @@ function DoctorDashboard() {
             return;
         }
 
-
-        // ----------------------------------------------------
-        // BASIC EMAIL VALIDATION
-        // ----------------------------------------------------
 
         const emailPattern =
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -551,22 +700,13 @@ function DoctorDashboard() {
             setSuccess("");
 
 
-            // ------------------------------------------------
-            // SEND EMAIL REQUEST
-            // ------------------------------------------------
-
             const response =
                 await API.post(
-
                     `/reports/email/${profile.patient_id}`,
-
                     {
-
                         patient_email:
                             patientEmail.trim()
-
                     }
-
                 );
 
 
@@ -590,29 +730,32 @@ function DoctorDashboard() {
 
 
             setError(
-
                 error.response?.data?.detail ||
-
                 "Unable to send patient report by email."
-
             );
 
 
         } finally {
 
             setSendingEmail(false);
+
         }
+
     };
 
+
+    // ============================================================
+    // RENDER
+    // ============================================================
 
     return (
 
         <div className="doctor-dashboard">
 
 
-            {/* ==================================================
+            {/* ====================================================
                 HEADER
-            ================================================== */}
+            ==================================================== */}
 
             <div className="doctor-header">
 
@@ -620,9 +763,11 @@ function DoctorDashboard() {
                     DiagaNova
                 </div>
 
+
                 <h1>
                     Doctor Dashboard
                 </h1>
+
 
                 <p>
                     Patient Assessment Portal
@@ -631,9 +776,9 @@ function DoctorDashboard() {
             </div>
 
 
-            {/* ==================================================
+            {/* ====================================================
                 SEARCH
-            ================================================== */}
+            ==================================================== */}
 
             <div className="doctor-search">
 
@@ -645,11 +790,15 @@ function DoctorDashboard() {
 
                     value={patientId}
 
-                    onChange={(e) =>
+                    onChange={(e) => {
+
                         setPatientId(
                             e.target.value
-                        )
-                    }
+                        );
+
+                        setError("");
+
+                    }}
 
                     onKeyDown={(e) => {
 
@@ -689,9 +838,9 @@ function DoctorDashboard() {
             </div>
 
 
-            {/* ==================================================
+            {/* ====================================================
                 ERROR
-            ================================================== */}
+            ==================================================== */}
 
             {error && (
 
@@ -704,9 +853,9 @@ function DoctorDashboard() {
             )}
 
 
-            {/* ==================================================
+            {/* ====================================================
                 SUCCESS
-            ================================================== */}
+            ==================================================== */}
 
             {success && (
 
@@ -719,9 +868,9 @@ function DoctorDashboard() {
             )}
 
 
-            {/* ==================================================
+            {/* ====================================================
                 PATIENT PROFILE
-            ================================================== */}
+            ==================================================== */}
 
             {profile && (
 
@@ -735,7 +884,7 @@ function DoctorDashboard() {
                         </span>
 
                         <strong>
-                            {profile.name}
+                            {profile.name || "N/A"}
                         </strong>
 
                     </div>
@@ -748,7 +897,7 @@ function DoctorDashboard() {
                         </span>
 
                         <strong>
-                            {profile.patient_id}
+                            {profile.patient_id || patientId}
                         </strong>
 
                     </div>
@@ -761,7 +910,7 @@ function DoctorDashboard() {
                         </span>
 
                         <strong>
-                            {profile.age}
+                            {profile.age ?? "N/A"}
                         </strong>
 
                     </div>
@@ -774,7 +923,7 @@ function DoctorDashboard() {
                         </span>
 
                         <strong>
-                            {profile.gender}
+                            {profile.gender || "N/A"}
                         </strong>
 
                     </div>
@@ -784,9 +933,48 @@ function DoctorDashboard() {
             )}
 
 
-            {/* ==================================================
+            {/* ====================================================
+                CONTACT INFORMATION
+            ==================================================== */}
+
+            {profile && (
+
+                <div className="doctor-profile">
+
+
+                    <div className="doctor-profile-card">
+
+                        <span>
+                            Phone
+                        </span>
+
+                        <strong>
+                            {profile.phone || "N/A"}
+                        </strong>
+
+                    </div>
+
+
+                    <div className="doctor-profile-card">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong>
+                            {profile.email || "N/A"}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            )}
+
+
+            {/* ====================================================
                 AI RESULTS
-            ================================================== */}
+            ==================================================== */}
 
             {latestRecord && (
 
@@ -796,13 +984,15 @@ function DoctorDashboard() {
                         Latest AI Screening
                     </h2>
 
-                    {/* ==================================================
-                        AI PREDICTION PROBABILITIES
-                    ================================================== */}
+
+                    {/* =================================================
+                        DISEASE CARDS
+                    ================================================= */}
 
                     <div className="disease-grid">
 
-                        {/* HEART DISEASE */}
+
+                        {/* HEART */}
 
                         <div className="disease-card">
 
@@ -826,9 +1016,13 @@ function DoctorDashboard() {
                                         marginTop: "6px"
                                     }}
                                 >
-                                    {predictionPercentage(
-                                        latestRecord.heart_disease
-                                    )}
+
+                                    {
+                                        predictionPercentage(
+                                            latestRecord.heart_disease
+                                        )
+                                    }
+
                                 </strong>
 
                                 <p
@@ -872,9 +1066,13 @@ function DoctorDashboard() {
                                         marginTop: "6px"
                                     }}
                                 >
-                                    {predictionPercentage(
-                                        latestRecord.diabetes
-                                    )}
+
+                                    {
+                                        predictionPercentage(
+                                            latestRecord.diabetes
+                                        )
+                                    }
+
                                 </strong>
 
                                 <p
@@ -918,9 +1116,13 @@ function DoctorDashboard() {
                                         marginTop: "6px"
                                     }}
                                 >
-                                    {predictionPercentage(
-                                        latestRecord.brain_tumor
-                                    )}
+
+                                    {
+                                        predictionPercentage(
+                                            latestRecord.brain_tumor
+                                        )
+                                    }
+
                                 </strong>
 
                                 <p
@@ -942,9 +1144,9 @@ function DoctorDashboard() {
                     </div>
 
 
-                    {/* ==================================================
+                    {/* =================================================
                         ASSESSMENT INFORMATION
-                    ================================================== */}
+                    ================================================= */}
 
                     <div className="assessment-summary">
 
@@ -955,7 +1157,10 @@ function DoctorDashboard() {
                             </span>
 
                             <strong>
-                                {latestRecord.entry_id}
+                                {
+                                    latestRecord.entry_id ||
+                                    "N/A"
+                                }
                             </strong>
 
                         </div>
@@ -968,7 +1173,10 @@ function DoctorDashboard() {
                             </span>
 
                             <strong>
-                                {latestRecord.created_at}
+                                {
+                                    latestRecord.created_at ||
+                                    "N/A"
+                                }
                             </strong>
 
                         </div>
@@ -976,9 +1184,9 @@ function DoctorDashboard() {
                     </div>
 
 
-                    {/* ==================================================
-                        OVERALL PROBABILITY SUMMARY
-                    ================================================== */}
+                    {/* =================================================
+                        OVERALL SUMMARY
+                    ================================================= */}
 
                     <div className="overall-status">
 
@@ -987,11 +1195,35 @@ function DoctorDashboard() {
                         </span>
 
                         <strong>
-                            Heart: {predictionPercentage(latestRecord.heart_disease)}
+
+                            Heart:
                             {" "}
-                            | Diabetes: {predictionPercentage(latestRecord.diabetes)}
+                            {
+                                predictionPercentage(
+                                    latestRecord.heart_disease
+                                )
+                            }
+
+                            {" | "}
+
+                            Diabetes:
                             {" "}
-                            | Brain Tumor: {predictionPercentage(latestRecord.brain_tumor)}
+                            {
+                                predictionPercentage(
+                                    latestRecord.diabetes
+                                )
+                            }
+
+                            {" | "}
+
+                            Brain Tumor:
+                            {" "}
+                            {
+                                predictionPercentage(
+                                    latestRecord.brain_tumor
+                                )
+                            }
+
                         </strong>
 
                     </div>
@@ -1001,9 +1233,9 @@ function DoctorDashboard() {
             )}
 
 
-            {/* ==================================================
+            {/* ====================================================
                 DOCTOR ASSESSMENT
-            ================================================== */}
+            ==================================================== */}
 
             {profile && latestRecord && (
 
@@ -1017,20 +1249,17 @@ function DoctorDashboard() {
                         </h2>
 
                         <p>
-
                             Review the AI screening
-                            results and provide
-                            your professional
-                            assessment.
-
+                            results and provide your
+                            professional assessment.
                         </p>
 
                     </div>
 
 
-                    {/* ==================================================
+                    {/* =================================================
                         CLINICAL ASSESSMENT
-                    ================================================== */}
+                    ================================================= */}
 
                     <div className="feedback-field">
 
@@ -1067,16 +1296,17 @@ function DoctorDashboard() {
                         <div className="character-count">
 
                             {clinicalAssessment.length}
-                            {" "}characters
+                            {" "}
+                            characters
 
                         </div>
 
                     </div>
 
 
-                    {/* ==================================================
+                    {/* =================================================
                         RECOMMENDATION
-                    ================================================== */}
+                    ================================================= */}
 
                     <div className="feedback-field">
 
@@ -1113,16 +1343,17 @@ function DoctorDashboard() {
                         <div className="character-count">
 
                             {recommendation.length}
-                            {" "}characters
+                            {" "}
+                            characters
 
                         </div>
 
                     </div>
 
 
-                    {/* ==================================================
-                        REVIEW
-                    ================================================== */}
+                    {/* =================================================
+                        REVIEW CONFIRMATION
+                    ================================================= */}
 
                     <div className="review-confirmation">
 
@@ -1144,6 +1375,7 @@ function DoctorDashboard() {
 
                             />
 
+
                             <span>
 
                                 I confirm that I
@@ -1158,9 +1390,9 @@ function DoctorDashboard() {
                     </div>
 
 
-                    {/* ==================================================
+                    {/* =================================================
                         STATUS
-                    ================================================== */}
+                    ================================================= */}
 
                     <div
 
@@ -1172,20 +1404,21 @@ function DoctorDashboard() {
 
                     >
 
-                        {feedbackComplete
+                        {
+                            feedbackComplete
 
-                            ? "✓ Assessment complete. Ready to save."
+                                ? "✓ Assessment complete. Ready to save."
 
-                            : "Please complete the clinical assessment, recommendation, and review confirmation before saving."
+                                : "Please complete the clinical assessment, recommendation, and review confirmation before saving."
 
                         }
 
                     </div>
 
 
-                    {/* ==================================================
+                    {/* =================================================
                         SAVE ASSESSMENT
-                    ================================================== */}
+                    ================================================= */}
 
                     <button
 
@@ -1202,20 +1435,20 @@ function DoctorDashboard() {
 
                     >
 
-                        {savingAssessment
+                        {
+                            savingAssessment
 
-                            ? "SAVING ASSESSMENT..."
+                                ? "SAVING ASSESSMENT..."
 
-                            : "SAVE DOCTOR ASSESSMENT"
-
+                                : "SAVE DOCTOR ASSESSMENT"
                         }
 
                     </button>
 
 
-                    {/* ==================================================
+                    {/* =================================================
                         GENERATE PDF
-                    ================================================== */}
+                    ================================================= */}
 
                     <button
 
@@ -1232,20 +1465,20 @@ function DoctorDashboard() {
 
                     >
 
-                        {generatingPDF
+                        {
+                            generatingPDF
 
-                            ? "GENERATING PDF..."
+                                ? "GENERATING PDF..."
 
-                            : "GENERATE PDF REPORT"
-
+                                : "GENERATE PDF REPORT"
                         }
 
                     </button>
 
 
-                    {/* ==================================================
-                        EMAIL SECTION
-                    ================================================== */}
+                    {/* =================================================
+                        EMAIL REPORT
+                    ================================================= */}
 
                     <div className="email-report-section">
 
@@ -1298,10 +1531,6 @@ function DoctorDashboard() {
                         </div>
 
 
-                        {/* ==================================================
-                            SEND EMAIL BUTTON
-                        ================================================== */}
-
                         <button
 
                             className="generate-report-button"
@@ -1318,29 +1547,29 @@ function DoctorDashboard() {
 
                         >
 
-                            {sendingEmail
+                            {
+                                sendingEmail
 
-                                ? "SENDING REPORT..."
+                                    ? "SENDING REPORT..."
 
-                                : "SEND PDF TO PATIENT"
-
+                                    : "SEND PDF TO PATIENT"
                             }
 
                         </button>
 
                     </div>
 
-
                 </div>
 
             )}
 
 
-            {/* ==================================================
+            {/* ====================================================
                 HISTORY
-            ================================================== */}
+            ==================================================== */}
 
             {history &&
+                history.records &&
                 history.records.length > 0 && (
 
                     <div className="history">
@@ -1385,58 +1614,64 @@ function DoctorDashboard() {
 
                                 <tbody>
 
-                                    {history.records
-                                        .slice()
-                                        .reverse()
-                                        .map(
-                                            (record) => (
+                                    {
+                                        history.records
+                                            .slice()
+                                            .reverse()
+                                            .map(
+                                                (record) => (
 
-                                                <tr
-                                                    key={
-                                                        record.entry_id
-                                                    }
-                                                >
-
-                                                    <td>
-                                                        {
+                                                    <tr
+                                                        key={
                                                             record.entry_id
                                                         }
-                                                    </td>
+                                                    >
 
-                                                    <td>
-                                                        {
-                                                            record.created_at
-                                                        }
-                                                    </td>
+                                                        <td>
+                                                            {
+                                                                record.entry_id
+                                                            }
+                                                        </td>
 
-                                                    <td>
 
-                                                        {predictionPercentage(
-                                                            record.heart_disease
-                                                        )}
+                                                        <td>
+                                                            {
+                                                                record.created_at
+                                                            }
+                                                        </td>
 
-                                                    </td>
 
-                                                    <td>
+                                                        <td>
+                                                            {
+                                                                predictionPercentage(
+                                                                    record.heart_disease
+                                                                )
+                                                            }
+                                                        </td>
 
-                                                        {predictionPercentage(
-                                                            record.diabetes
-                                                        )}
 
-                                                    </td>
+                                                        <td>
+                                                            {
+                                                                predictionPercentage(
+                                                                    record.diabetes
+                                                                )
+                                                            }
+                                                        </td>
 
-                                                    <td>
 
-                                                        {predictionPercentage(
-                                                            record.brain_tumor
-                                                        )}
+                                                        <td>
+                                                            {
+                                                                predictionPercentage(
+                                                                    record.brain_tumor
+                                                                )
+                                                            }
+                                                        </td>
 
-                                                    </td>
+                                                    </tr>
 
-                                                </tr>
-
+                                                )
                                             )
-                                        )}
+                                    }
 
                                 </tbody>
 
@@ -1450,11 +1685,12 @@ function DoctorDashboard() {
             }
 
 
-            {/* ==================================================
+            {/* ====================================================
                 NO HISTORY
-            ================================================== */}
+            ==================================================== */}
 
             {history &&
+                history.records &&
                 history.records.length === 0 && (
 
                     <div className="doctor-message">
@@ -1468,9 +1704,9 @@ function DoctorDashboard() {
             }
 
 
-            {/* ==================================================
+            {/* ====================================================
                 DISCLAIMER
-            ================================================== */}
+            ==================================================== */}
 
             {profile && (
 
@@ -1479,6 +1715,7 @@ function DoctorDashboard() {
                     <strong>
                         Clinical Disclaimer
                     </strong>
+
 
                     <p>
 
@@ -1499,6 +1736,7 @@ function DoctorDashboard() {
         </div>
 
     );
+
 }
 
 
