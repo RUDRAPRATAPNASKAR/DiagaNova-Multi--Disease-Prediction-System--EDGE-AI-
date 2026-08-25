@@ -10,15 +10,14 @@ const API = axios.create({
 // GET LATEST PREDICTION
 // ============================================================
 
-export const getLatestPrediction = async () => {
+export const getPatientProfile = async (patientId) => {
 
     const response = await API.get(
-        "/predictions/latest"
+        `/patients/${patientId}`
     );
 
     return response.data;
 };
-
 
 // ============================================================
 // GET ALL PREDICTIONS
