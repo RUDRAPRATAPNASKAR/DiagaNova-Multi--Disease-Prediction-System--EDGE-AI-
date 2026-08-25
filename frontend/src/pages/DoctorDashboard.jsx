@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API from "../services/api";
 
 import {
     getPatientHistory,
@@ -288,9 +289,8 @@ function DoctorDashboard() {
             // ------------------------------------------------
 
             const response =
-                await axios.post(
-
-                    "http://127.0.0.1:8000/api/doctor/assessment",
+                await API.post(
+                         "/doctor/assessment",
 
                     {
 
@@ -384,9 +384,9 @@ function DoctorDashboard() {
 
 
             const response =
-                await axios.get(
+                await API.get(
 
-                    `http://127.0.0.1:8000/api/reports/generate/${profile.patient_id}`,
+                    `/reports/generate/${profile.patient_id}`,
 
                     {
                         responseType: "blob"
@@ -556,9 +556,9 @@ function DoctorDashboard() {
             // ------------------------------------------------
 
             const response =
-                await axios.post(
+                await API.post(
 
-                    `http://127.0.0.1:8000/api/reports/email/${profile.patient_id}`,
+                    `/reports/email/${profile.patient_id}`,
 
                     {
 
