@@ -23,7 +23,7 @@ function DoctorLogin() {
             setLoading(true);
 
             const response = await fetch(
-                "http://127.0.0.1:8000/api/doctor/login",
+                "https://diaganova-backend.onrender.com/api/doctor/login",
                 {
                     method: "POST",
                     headers: {
