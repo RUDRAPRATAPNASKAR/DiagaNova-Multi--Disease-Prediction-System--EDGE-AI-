@@ -5,35 +5,33 @@ import {
     getPatientProfile
 } from "../services/api";
 
-import DiseaseCard
-    from "../components/DiseaseCard";
+import DiseaseCard from "../components/DiseaseCard";
 
 
 function PatientDashboard() {
 
-    const [patientId, setPatientId]
-        = useState("");
+    const [patientId, setPatientId] = useState("");
 
-    const [profile, setProfile]
-        = useState(null);
+    const [profile, setProfile] = useState(null);
 
-    const [data, setData]
-        = useState(null);
+    const [data, setData] = useState(null);
 
-    const [loading, setLoading]
-        = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const [error, setError]
-        = useState("");
+    const [error, setError] = useState("");
 
+
+    // ============================================================
+    // SEARCH PATIENT
+    // ============================================================
 
     const searchPatient = async () => {
 
-        if (!patientId.trim()) {
+        const id = patientId.trim();
 
-            setError(
-                "Please enter Patient ID."
-            );
+        if (!id) {
+
+            setError("Please enter Patient ID.");
 
             return;
         }
@@ -45,41 +43,80 @@ function PatientDashboard() {
 
             setError("");
 
-
-            // Get patient profile
-            const patientProfile =
-                await getPatientProfile(
-                    patientId.trim()
-                );
-
-
-            // Get ThingSpeak predictions
-            const patientData =
-                await getPatientHistory(
-                    patientId.trim()
-                );
-
-
-            setProfile(
-                patientProfile
-            );
-
-            setData(
-                patientData
-            );
-
-
-        } catch (error) {
-
-            console.error(error);
-
             setProfile(null);
 
             setData(null);
 
-            setError(
-                "Patient could not be found."
-            );
+
+            // ====================================================
+            // 1. GET SQL PATIENT PROFILE
+            // ====================================================
+
+            let patientProfile = null;
+
+            try {
+
+                patientProfile =
+                    await getPatientProfile(id);
+
+                console.log(
+                    "SQL PATIENT PROFILE:",
+                    patientProfile
+                );
+
+                setProfile(patientProfile);
+
+            } catch (profileError) {
+
+                console.error(
+                    "SQL PROFILE ERROR:",
+                    profileError
+                );
+
+                setProfile(null);
+            }
+
+
+            // ====================================================
+            // 2. GET THINGSPEAK / PREDICTION DATA
+            // ====================================================
+
+            let patientData = null;
+
+            try {
+
+                patientData =
+                    await getPatientHistory(id);
+
+                console.log(
+                    "PATIENT PREDICTION DATA:",
+                    patientData
+                );
+
+                setData(patientData);
+
+            } catch (predictionError) {
+
+                console.error(
+                    "PREDICTION DATA ERROR:",
+                    predictionError
+                );
+
+                setData(null);
+            }
+
+
+            // ====================================================
+            // CHECK WHETHER ANYTHING WAS FOUND
+            // ====================================================
+
+            if (!patientProfile && !patientData) {
+
+                setError(
+                    "Patient could not be found."
+                );
+
+            }
 
 
         } finally {
@@ -89,13 +126,21 @@ function PatientDashboard() {
     };
 
 
+    // ============================================================
+    // GET LATEST RECORD
+    // ============================================================
+
     const latest =
-        data?.records?.length
+        data?.records?.length > 0
             ? data.records[
                 data.records.length - 1
-              ]
+            ]
             : null;
 
+
+    // ============================================================
+    // PAGE
+    // ============================================================
 
     return (
 
@@ -105,13 +150,15 @@ function PatientDashboard() {
                 Patient Dashboard
             </h1>
 
+
             <p className="subtitle">
-                DiagaNova Multi Disease
-                Prediction System
+                DiagaNova Multi Disease Prediction System
             </p>
 
 
-            {/* SEARCH */}
+            {/* ==================================================
+                SEARCH
+            ================================================== */}
 
             <div className="search-box">
 
@@ -144,14 +191,21 @@ function PatientDashboard() {
 
                 <button
                     onClick={searchPatient}
+                    disabled={loading}
                 >
-                    SEARCH
+
+                    {loading
+                        ? "SEARCHING..."
+                        : "SEARCH"}
+
                 </button>
 
             </div>
 
 
-            {/* LOADING */}
+            {/* ==================================================
+                LOADING
+            ================================================== */}
 
             {loading && (
 
@@ -162,7 +216,9 @@ function PatientDashboard() {
             )}
 
 
-            {/* ERROR */}
+            {/* ==================================================
+                ERROR
+            ================================================== */}
 
             {error && (
 
@@ -173,11 +229,16 @@ function PatientDashboard() {
             )}
 
 
-            {/* PATIENT PROFILE */}
+            {/* ==================================================
+                PATIENT PROFILE - SQL DATABASE
+            ================================================== */}
 
             {profile && (
 
                 <div className="patient-profile">
+
+
+                    {/* PATIENT NAME */}
 
                     <div>
 
@@ -186,11 +247,13 @@ function PatientDashboard() {
                         </span>
 
                         <strong>
-                            {profile.name}
+                            {profile.name || "N/A"}
                         </strong>
 
                     </div>
 
+
+                    {/* PATIENT ID */}
 
                     <div>
 
@@ -199,11 +262,13 @@ function PatientDashboard() {
                         </span>
 
                         <strong>
-                            {profile.patient_id}
+                            {profile.patient_id || patientId}
                         </strong>
 
                     </div>
 
+
+                    {/* AGE */}
 
                     <div>
 
@@ -212,11 +277,13 @@ function PatientDashboard() {
                         </span>
 
                         <strong>
-                            {profile.age}
+                            {profile.age ?? "N/A"}
                         </strong>
 
                     </div>
 
+
+                    {/* GENDER */}
 
                     <div>
 
@@ -225,7 +292,7 @@ function PatientDashboard() {
                         </span>
 
                         <strong>
-                            {profile.gender}
+                            {profile.gender || "N/A"}
                         </strong>
 
                     </div>
@@ -235,7 +302,55 @@ function PatientDashboard() {
             )}
 
 
-            {/* PREDICTION RESULTS */}
+            {/* ==================================================
+                EXTRA PATIENT INFORMATION
+            ================================================== */}
+
+            {profile && (
+
+                <div className="patient-contact-info">
+
+                    {profile.phone && (
+
+                        <div>
+
+                            <span>
+                                Phone
+                            </span>
+
+                            <strong>
+                                {profile.phone}
+                            </strong>
+
+                        </div>
+
+                    )}
+
+
+                    {profile.email && (
+
+                        <div>
+
+                            <span>
+                                Email
+                            </span>
+
+                            <strong>
+                                {profile.email}
+                            </strong>
+
+                        </div>
+
+                    )}
+
+                </div>
+
+            )}
+
+
+            {/* ==================================================
+                PREDICTION RESULTS
+            ================================================== */}
 
             {latest && (
 
@@ -247,6 +362,9 @@ function PatientDashboard() {
 
 
                     <div className="disease-grid">
+
+
+                        {/* HEART DISEASE */}
 
                         <DiseaseCard
 
@@ -261,6 +379,8 @@ function PatientDashboard() {
                         />
 
 
+                        {/* DIABETES */}
+
                         <DiseaseCard
 
                             title="Diabetes"
@@ -273,6 +393,8 @@ function PatientDashboard() {
 
                         />
 
+
+                        {/* BRAIN TUMOR */}
 
                         <DiseaseCard
 
@@ -289,6 +411,10 @@ function PatientDashboard() {
                     </div>
 
 
+                    {/* ==================================================
+                        ASSESSMENT DATE
+                    ================================================== */}
+
                     <div className="assessment-info">
 
                         <strong>
@@ -296,11 +422,15 @@ function PatientDashboard() {
                         </strong>
 
                         <span>
-                            {latest.created_at}
+                            {latest.created_at || "N/A"}
                         </span>
 
                     </div>
 
+
+                    {/* ==================================================
+                        DISCLAIMER
+                    ================================================== */}
 
                     <div className="disclaimer">
 
@@ -311,6 +441,22 @@ function PatientDashboard() {
                     </div>
 
                 </>
+
+            )}
+
+
+            {/* ==================================================
+                NO PREDICTION DATA
+            ================================================== */}
+
+            {profile && !latest && !loading && (
+
+                <div className="no-data">
+
+                    Patient profile found, but no
+                    screening prediction is available yet.
+
+                </div>
 
             )}
 
