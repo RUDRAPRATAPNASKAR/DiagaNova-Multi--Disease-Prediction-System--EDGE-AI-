@@ -35,7 +35,7 @@ export const getAllPredictions = async () => {
 
 
 // ============================================================
-// GET PATIENT HISTORY
+// GET PATIENT HISTORY / PREDICTIONS
 // ============================================================
 
 export const getPatientHistory = async (patientId) => {
@@ -49,13 +49,13 @@ export const getPatientHistory = async (patientId) => {
 
 
 // ============================================================
-// GET PATIENT PROFILE
+// GET PATIENT PROFILE / SQL DATABASE
 // ============================================================
 
 export const getPatientProfile = async (patientId) => {
 
     const response = await API.get(
-        `/patients/${patientId}`
+        `/patients/profile/${patientId}`
     );
 
     return response.data;
