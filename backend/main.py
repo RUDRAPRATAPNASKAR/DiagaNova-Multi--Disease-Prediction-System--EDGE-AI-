@@ -19,6 +19,7 @@ from database import (
     Doctor,
     DoctorAssessment
 )
+from doctor_accounts import DOCTORS
 
 from thingspeak import (
     get_latest_record,
@@ -108,7 +109,97 @@ def verify_password(
 
         return False
 
+# ============================================================
+# AUTOMATIC DOCTOR INITIALIZATION
+# ============================================================
 
+def initialize_doctors():
+
+    db = SessionLocal()
+
+    try:
+
+        for doctor_data in DOCTORS:
+
+            doctor_id = doctor_data["doctor_id"]
+            doctor_name = doctor_data["name"]
+            doctor_password = doctor_data["password"]
+
+
+            # ------------------------------------------------
+            # CHECK EXISTING DOCTOR
+            # ------------------------------------------------
+
+            doctor = db.query(
+                Doctor
+            ).filter(
+                Doctor.doctor_id == doctor_id
+            ).first()
+
+
+            # ------------------------------------------------
+            # CREATE DOCTOR IF NOT EXISTS
+            # ------------------------------------------------
+
+            if doctor is None:
+
+                doctor = Doctor(
+
+                    doctor_id=doctor_id,
+
+                    name=doctor_name,
+
+                    password_hash=
+                        hash_password(
+                            doctor_password
+                        )
+                )
+
+                db.add(doctor)
+
+                print(
+                    f"DOCTOR CREATED: {doctor_id}"
+                )
+
+
+            # ------------------------------------------------
+            # UPDATE EXISTING DOCTOR
+            # ------------------------------------------------
+
+            else:
+
+                doctor.name = doctor_name
+
+                doctor.password_hash = \
+                    hash_password(
+                        doctor_password
+                    )
+
+                print(
+                    f"DOCTOR UPDATED: {doctor_id}"
+                )
+
+
+        db.commit()
+
+
+    except Exception as e:
+
+        db.rollback()
+
+        print(
+            "DOCTOR INITIALIZATION ERROR:",
+            e
+        )
+
+        raise
+
+
+    finally:
+
+        db.close()
+        
+initialize_doctors()
 # ============================================================
 # PATIENT REGISTRATION MODEL
 # ============================================================
