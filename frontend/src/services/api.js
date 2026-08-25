@@ -1,13 +1,17 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "http://127.0.0.1:8000/api",
-    timeout: 10000
+    baseURL: "https://diaganova-backend.onrender.com/api",
+    timeout: 20000
 });
 
 
-// Get latest prediction
+// ============================================================
+// GET LATEST PREDICTION
+// ============================================================
+
 export const getLatestPrediction = async () => {
+
     const response = await API.get(
         "/predictions/latest"
     );
@@ -16,8 +20,12 @@ export const getLatestPrediction = async () => {
 };
 
 
-// Get all predictions
+// ============================================================
+// GET ALL PREDICTIONS
+// ============================================================
+
 export const getAllPredictions = async () => {
+
     const response = await API.get(
         "/predictions"
     );
@@ -26,15 +34,24 @@ export const getAllPredictions = async () => {
 };
 
 
-// Get patient history
+// ============================================================
+// GET PATIENT HISTORY
+// ============================================================
+
 export const getPatientHistory = async (patientId) => {
+
     const response = await API.get(
         `/patients/${patientId}`
     );
 
     return response.data;
 };
-// Get patient profile
+
+
+// ============================================================
+// GET PATIENT PROFILE
+// ============================================================
+
 export const getPatientProfile = async (patientId) => {
 
     const response = await API.get(
@@ -43,3 +60,10 @@ export const getPatientProfile = async (patientId) => {
 
     return response.data;
 };
+
+
+// ============================================================
+// API INSTANCE
+// ============================================================
+
+export default API;
